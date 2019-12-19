@@ -164,8 +164,8 @@ namespace :nginx do
 
       set :gpg_phrase, ask("GPG passphrase for SSL key and DH:",nil)
       set :ssl_path, "/etc/nginx/ssl"
-      key = `echo #{fetch(:gpg_phrase)} | gpg -d -q --batch --passphrase-fd 0 --no-mdc-warning #{fetch(:ssl_key_path)}`
-      dh = `echo #{fetch(:gpg_phrase)} | gpg -d -q --batch --passphrase-fd 0 --no-mdc-warning #{fetch(:ssl_dh_path)}`
+      key = `echo #{fetch(:gpg_phrase)} | gpg -d -q --batch --passphrase-fd 0 --no-mdc-warning --ignore-mdc-error #{fetch(:ssl_key_path)}`
+      dh = `echo #{fetch(:gpg_phrase)} | gpg -d -q --batch --passphrase-fd 0 --no-mdc-warning --ignore-mdc-error #{fetch(:ssl_dh_path)}`
       set :certificate_sha256, `openssl x509 -in #{fetch(:ssl_cert_path)} -pubkey -noout | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -binary | openssl enc -base64`
       if $?.success?
         on roles(:web) do
